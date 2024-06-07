@@ -38,7 +38,7 @@ def user(user_creating):
         'access_token': access_token
     }
     headers = {'Authorization': access_token}
-    requests.delete(data.user_info, headers=headers)
+
 
 @pytest.fixture
 def order_making(user):

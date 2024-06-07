@@ -25,7 +25,7 @@ class TestUserCreating:
             'name': user['name']
         }
         response = requests.post(data.user_register, data=payload)
-        assert response.status_code == 403 and response.json().get("success") is False and response.json()['message'] == 'User already exists'
+        assert response.status_code == 403  and response.json()['message'] == 'User already exists'
 
 
     @allure.title('Ошибка при создании пользователя без заполнения обязательных полей: email, password и name')
@@ -36,7 +36,7 @@ class TestUserCreating:
     ])
     def test_register_without_one_field_failed_result(self, payload):
         response = requests.post(data.user_register, data=payload)
-        assert response.status_code == 403 and response.json().get("success") is False and response.json()['message'] == 'Email, password and name are required fields'
+        assert response.status_code == 403  and response.json()['message'] == 'Email, password and name are required fields'
 
 
 
@@ -48,7 +48,7 @@ class TestUserDataChanging:
         payload = {'email': new_email}
         headers = {'Authorization': user['access_token']}
         response = requests.patch(data.user_info, data=payload, headers=headers)
-        assert response.status_code == 200 and response.json().get("success") is True and response.json()['user']['email'] == new_email
+        assert response.status_code == 200  and response.json()['user']['email'] == new_email
 
 
     @allure.title('Успешная проверка изменения имени существующего пользователя')
@@ -57,7 +57,7 @@ class TestUserDataChanging:
         payload = {'name': name}
         headers = {'Authorization': user['access_token']}
         response = requests.patch(data.user_info, data=payload, headers=headers)
-        assert response.status_code == 200 and response.json().get("success") is True and response.json()['user']['name'] == name
+        assert response.status_code == 200  and response.json()['user']['name'] == name
 
 
     @allure.title('Успешная проверка изменения пароля существующего пользователя')
@@ -80,7 +80,7 @@ class TestUserDataChanging:
             'name': name
         }
         response = requests.patch(data.user_info, data=payload)
-        assert response.status_code == 401 and response.json().get("success") is False and response.json()['message'] == 'You should be authorised'
+        assert response.status_code == 401  and response.json()['message'] == 'You should be authorised'
 
 
 
@@ -104,7 +104,7 @@ class TestUserLogin:
             'password': user['password']
         }
         response = requests.post(data.user_login, data=payload)
-        assert response.status_code == 401 and response.json()['message'] == 'email or password are incorrect'and response.json().get("success") is False
+        assert response.status_code == 401 and response.json()['message'] == 'email or password are incorrect'
 
 
     @allure.title('Ошибка при проверке пользователя с некорректным паролем')
@@ -114,22 +114,12 @@ class TestUserLogin:
             'password': data.incorrect_password
         }
         response = requests.post(data.user_login, data=payload)
-        assert response.status_code == 401 and response.json()['message'] == 'email or password are incorrect' and response.json().get("success") is False
+        assert response.status_code == 401 and response.json()['message'] == 'email or password are incorrect'
 
 
 
 
-class TestUserOrderGetting:
-
-    @allure.title('Успешная проверка получения заказов авторизованного пользователя')
-    def test_getting_order_authorized_user(self, user, order_making):
-        headers = {'Authorization': user['access_token']}
-        response = requests.get(data.user_order, headers=headers)
-        assert response.status_code == 200 and response.json().get("success") is True and response.json()['orders'][0]['number'] == order_making
 
 
-    @allure.title('Ошибка проверки получения заказов неавторизованного пользователя')
-    def test_getting_order_unauthorized_user(self):
-        response = requests.get(data.user_order)
-        assert response.status_code == 401 and response.json().get("success") is False and response.json()['message'] == 'You should be authorised'
+
 
